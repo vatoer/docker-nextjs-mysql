@@ -1,0 +1,55 @@
+version: "3.8"
+
+services:
+  db:
+    container_name: mysql
+    build:
+      context: .
+      dockerfile: mysql.Dockerfile
+    restart: always
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    env_file:
+      - .env
+    volumes:
+      - ./db:/var/lib/mysql
+    ports:
+      - 3306:3306
+    networks:
+      - my_network
+  next-app:
+    container_name: next-app
+    build:
+      context: .
+      dockerfile: dev.Dockerfile
+    depends_on:
+      - db
+    command: sh -c "/wait && /run-after-wait"
+    # Set environment variables directly in the docker-compose file
+    environment:
+      - WAIT_HOSTS=mysql:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+      - WAIT_HOST_RETRY_INTERVAL=30
+    # Set environment variables based on the .env file
+    env_file:
+      - .env
+    volumes:
+      - ./next-app:/app/next-app
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - my_network
+
+  # Add more containers below (nginx, postgres, etc.)
+
+# Define a network, which allows containers to communicate
+# with each other, by using their container name as a hostname
+networks:
+  my_network:
+    external: true

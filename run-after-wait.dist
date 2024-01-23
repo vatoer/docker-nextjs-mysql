@@ -1,0 +1,15 @@
+#!/bin/sh
+
+echo You have done a great job.
+echo 💥 Congratulations! 💥
+echo --------------------------
+# yarn global add pnpm
+cd /app/next-app
+
+# here you can run any command you want
+# as example we push prisma schema to db
+yarn install
+# yarn prisma migrate dev --schema ./prisma/db-auth/schema.prisma
+# cp public/logo-dist.png public/logo.png
+
+yarn dev
