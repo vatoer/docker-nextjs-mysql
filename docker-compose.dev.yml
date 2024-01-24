@@ -27,7 +27,6 @@ services:
       dockerfile: dev.Dockerfile
     depends_on:
       - db
-    command: sh -c "/wait && /run-after-wait"
     # Set environment variables directly in the docker-compose file
     environment:
       - WAIT_HOSTS=mysql:3306

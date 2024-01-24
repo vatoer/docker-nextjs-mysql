@@ -37,6 +37,7 @@ next-env.d.ts
 
 # run after wait
 run-after-wait
+executeMeWhenReady
 
 next-app
 db
